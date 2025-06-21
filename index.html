@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LojaUGC</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .produtos {
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+    gap: 1rem;
+  }
+  .produto {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .produto img {
+    width: 100%;
+    max-width: 150px;
+    border-radius: 6px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+  }
+  .produto h3 {
+    margin: 0.3rem 0;
+    font-size: 1.1rem;
+  }
+  .produto p {
+    font-weight: bold;
+    margin: 0.3rem 0 0.8rem 0;
+    font-size: 1rem;
+  }
+  .produto button {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+  }
+  .produto button:hover {
+    background: #0056b3;
+  }
+
+  /* Carrinho lateral */
+  .carrinho {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+  .carrinho h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  ul#itens-carrinho {
+    list-style: none;
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+  ul#itens-carrinho li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.4rem;
+  }
+  ul#itens-carrinho li span.nome-produto {
+    flex: 2;
+  }
+  ul#itens-carrinho li span.quantidade {
+    flex: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  ul#itens-carrinho li span.quantidade button {
+    padding: 0.2rem 0.5rem;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  ul#itens-carrinho li span.quantidade button:hover {
+    background: #0056b3;
+  }
+  ul#itens-carrinho li span.preco {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+  }
+  ul#itens-carrinho li span.remover {
+    flex: 0.5;
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  ul#itens-carrinho li span.remover:hover {
+    color: darkred;
+  }
+  #total-carrinho {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  #finalizar-whatsapp {
+    background: #25D366;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #finalizar-whatsapp:hover {
+    background: #1ebe57;
+  }
+
+</style>
+</head>
+<body>
+
+<header>LojaUGC</header>
+
+<main>
+  <section class="produtos">
+    <div class="produto" data-id="1" data-preco="1.00">
+      <img src="https://via.placeholder.com/150?text=Jogo+de+Carro" alt="Jogo de Carro" />
+      <h3>Jogo de Carro</h3>
+      <p>R$ 1,00</p>
+      <button onclick="adicionarProduto(1, 'Jogo de Carro', 1.00)">Adicionar ao Carrinho</button>
+    </div>
+    <div class="produto" data-id="2" data-preco="1.00">
+      <img src="https://via.placeholder.com/150?text=Jogo+de+Parkour" alt="Jogo de Parkour" />
+      <h3>Jogo de Parkour</h3>
+      <p>R$ 1,00</p>
+      <button onclick="adicionarProduto(2, 'Jogo de Parkour', 1.00)">Adicionar ao Carrinho</button>
+    </div>
+    <div class="produto" data-id="3" data-preco="1.00">
+      <img src="https://via.placeholder.com/150?text=Chapeu+Roblox" alt="Chapéu Roblox" />
+      <h3>Chapéu Roblox</h3>
+      <p>R$ 1,00</p>
+      <button onclick="adicionarProduto(3, 'Chapéu Roblox', 1.00)">Adicionar ao Carrinho</button>
+    </div>
+  </section>
+
+  <aside class="carrinho">
+    <h2>Carrinho</h2>
+    <ul id="itens-carrinho"></ul>
+    <p id="total-carrinho">Total: R$ 0,00</p>
+    <button id="finalizar-whatsapp" onclick="finalizarPedidoWhats()">Finalizar compra pelo WhatsApp</button>
+  </aside>
+</main>
+
+<script>
+  let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+  function salvarCarrinho(){
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+  }
+
+  function atualizarCarrinho(){
+    const ul = document.getElementById('itens-carrinho');
+    ul.innerHTML = '';
+    let total = 0;
+
+    carrinho.forEach(item => {
+      total += item.preco * item.quantidade;
+      const li = document.createElement('li');
+
+      const nomeSpan = document.createElement('span');
+      nomeSpan.className = 'nome-produto';
+      nomeSpan.textContent = item.nome;
+
+      const quantidadeSpan = document.createElement('span');
+      quantidadeSpan.className = 'quantidade';
+
+      const btnMenos = document.createElement('button');
+      btnMenos.textContent = '-';
+      btnMenos.onclick = () => alterarQuantidade(item.id, item.quantidade - 1);
+
+      const qtdTexto = document.createElement('span');
+      qtdTexto.textContent = item.quantidade;
+
+      const btnMais = document.createElement('button');
+      btnMais.textContent = '+';
+      btnMais.onclick = () => alterarQuantidade(item.id, item.quantidade + 1);
+
+      quantidadeSpan.appendChild(btnMenos);
+      quantidadeSpan.appendChild(qtdTexto);
+      quantidadeSpan.appendChild(btnMais);
+
+      const precoSpan = document.createElement('span');
+      precoSpan.className = 'preco';
+      precoSpan.textContent = 'R$ ' + (item.preco * item.quantidade).toFixed(2);
+
+      const removerSpan = document.createElement('span');
+      removerSpan.className = 'remover';
+      removerSpan.textContent = '×';
+      removerSpan.title = 'Remover item';
+      removerSpan.onclick = () => removerItem(item.id);
+
+      li.appendChild(nomeSpan);
+      li.appendChild(quantidadeSpan);
+      li.appendChild(precoSpan);
+      li.appendChild(removerSpan);
+
+      ul.appendChild(li);
+    });
+
+    document.getElementById('total-carrinho').textContent = 'Total: R$ ' + total.toFixed(2);
+  }
+
+  function adicionarProduto(id, nome, preco){
+    const produtoExistente = carrinho.find(item => item.id === id);
+    if(produtoExistente){
+      produtoExistente.quantidade++;
+    } else {
+      carrinho.push({id, nome, preco, quantidade:1});
+    }
+    salvarCarrinho();
+    atualizarCarrinho();
+  }
+
+  function alterarQuantidade(id, novaQtd){
+    if(novaQtd < 1){
+      removerItem(id);
+      return;
+    }
+    const produto = carrinho.find(item => item.id === id);
+    if(produto){
+      produto.quantidade = novaQtd;
+      salvarCarrinho();
+      atualizarCarrinho();
+    }
+  }
+
+  function removerItem(id){
+    carrinho = carrinho.filter(item => item.id !== id);
+    salvarCarrinho();
+    atualizarCarrinho();
+  }
+
+  function finalizarPedidoWhats(){
+    if(carrinho.length === 0){
+      alert('Seu carrinho está vazio!');
+      return;
+    }
+    let texto = 'Olá! Quero comprar:%0A';
+    let total = 0;
+    carrinho.forEach(item => {
+      texto += `- ${item.nome} x${item.quantidade} - R$ ${(item.preco * item.quantidade).toFixed(2)}%0A`;
+      total += item.preco * item.quantidade;
+    });
+    texto += `%0ATotal: R$ ${total.toFixed(2)}`;
+    const numero = '5581993495505';
+    const url = `https://wa.me/${numero}?text=${texto}`;
+    window.open(url, '_blank');
+  }
+
+  atualizarCarrinho();
+</script>
+
+</body>
+</html>
